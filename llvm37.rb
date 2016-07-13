@@ -58,6 +58,10 @@ class Llvm37 < Formula
     resource "libcxx" do
       url "http://llvm.org/releases/3.7.1/libcxx-3.7.1.src.tar.xz"
       sha256 "357fbd4288ce99733ba06ae2bec6f503413d258aeebaab8b6a791201e6f7f144"
+      
+      inreplace "include/string",
+        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)" # Before
+        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
     end
 
     if MacOS.version <= :snow_leopard
