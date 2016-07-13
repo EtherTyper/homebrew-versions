@@ -58,10 +58,6 @@ class Llvm37 < Formula
     resource "libcxx" do
       url "http://llvm.org/releases/3.7.1/libcxx-3.7.1.src.tar.xz"
       sha256 "357fbd4288ce99733ba06ae2bec6f503413d258aeebaab8b6a791201e6f7f144"
-      
-      inreplace "include/string",
-        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)" # Before
-        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
     end
 
     if MacOS.version <= :snow_leopard
@@ -159,6 +155,10 @@ class Llvm37 < Formula
     clang_buildpath = buildpath/"tools/clang"
     libcxx_buildpath = buildpath/"projects/libcxx"
     libcxxabi_buildpath = buildpath/"libcxxabi" # build failure if put in projects due to no Makefile
+    
+    inreplace libcxxbuilpath/"include/string",
+      "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)" # Before
+      "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
 
     clang_buildpath.install resource("clang")
     libcxx_buildpath.install resource("libcxx")
