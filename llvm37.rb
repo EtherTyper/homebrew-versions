@@ -158,9 +158,11 @@ class Llvm37 < Formula
     
     clang_buildpath.install resource("clang")
     libcxx_buildpath.install resource("libcxx")
-    inreplace libcxx_buildpath/"include/string",
-      "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)" # Before
-      "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
+    libcxx_buildpath.install do 
+      inreplace "include/string",
+        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)" # Before
+        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
+    end
 
     (buildpath/"tools/polly").install resource("polly")
     (buildpath/"tools/clang/tools/extra").install resource("clang-tools-extra")
