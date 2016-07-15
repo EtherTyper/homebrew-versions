@@ -158,11 +158,6 @@ class Llvm37 < Formula
     
     clang_buildpath.install resource("clang")
     libcxx_buildpath.install resource("libcxx")
-    resource("libcxx").stage do 
-      inreplace "include/string",
-        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)", # Before
-        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
-    end
 
     (buildpath/"tools/polly").install resource("polly")
     (buildpath/"tools/clang/tools/extra").install resource("clang-tools-extra")
@@ -223,6 +218,7 @@ class Llvm37 < Formula
       inreplace "#{libcxx_buildpath}/lib/buildit" do |s|
         s.gsub! "-install_name /usr/lib/libc++.1.dylib", "-install_name #{install_prefix}/usr/lib/libc++.1.dylib"
         s.gsub! "-Wl,-reexport_library,/usr/lib/libc++abi.dylib", "-Wl,-reexport_library,#{install_prefix}/usr/lib/libc++abi.dylib"
+        s.gsub! "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)", "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
       end
 
       # On Snow Leopard and older system libc++abi is not shipped but
