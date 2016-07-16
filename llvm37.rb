@@ -155,10 +155,9 @@ class Llvm37 < Formula
     clang_buildpath = buildpath/"tools/clang"
     libcxx_buildpath = buildpath/"projects/libcxx"
     libcxxabi_buildpath = buildpath/"libcxxabi" # build failure if put in projects due to no Makefile
-    
+
     clang_buildpath.install resource("clang")
     libcxx_buildpath.install resource("libcxx")
-
     (buildpath/"tools/polly").install resource("polly")
     (buildpath/"tools/clang/tools/extra").install resource("clang-tools-extra")
     (buildpath/"tools/lld").install resource("lld") if build.with? "lld"
@@ -218,8 +217,11 @@ class Llvm37 < Formula
       inreplace "#{libcxx_buildpath}/lib/buildit" do |s|
         s.gsub! "-install_name /usr/lib/libc++.1.dylib", "-install_name #{install_prefix}/usr/lib/libc++.1.dylib"
         s.gsub! "-Wl,-reexport_library,/usr/lib/libc++abi.dylib", "-Wl,-reexport_library,#{install_prefix}/usr/lib/libc++abi.dylib"
-        s.gsub! "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)", "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
       end
+      
+      inreplace "#{libcxx_buildpath}/include/string",
+        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)",
+        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
 
       # On Snow Leopard and older system libc++abi is not shipped but
       # needed here. It is hard to tweak environment settings to change
