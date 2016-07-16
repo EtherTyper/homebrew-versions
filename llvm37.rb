@@ -226,7 +226,7 @@ class Llvm37 < Formula
       ln_s libcxxabi_buildpath/"include/cxxabi.h", libcxx_buildpath/"include"
     end
 
-    if MacOS.version >= :el_capitan do
+    if MacOS.version >= :el_capitan
       inreplace "#{libcxx_buildpath}/include/string",
         "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)",
         "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
