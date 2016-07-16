@@ -218,7 +218,7 @@ class Llvm37 < Formula
         s.gsub! "-install_name /usr/lib/libc++.1.dylib", "-install_name #{install_prefix}/usr/lib/libc++.1.dylib"
         s.gsub! "-Wl,-reexport_library,/usr/lib/libc++abi.dylib", "-Wl,-reexport_library,#{install_prefix}/usr/lib/libc++abi.dylib"
       end
-      
+
       inreplace "#{libcxx_buildpath}/include/string",
         "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)",
         "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
