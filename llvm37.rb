@@ -219,15 +219,17 @@ class Llvm37 < Formula
         s.gsub! "-Wl,-reexport_library,/usr/lib/libc++abi.dylib", "-Wl,-reexport_library,#{install_prefix}/usr/lib/libc++abi.dylib"
       end
 
-      inreplace "#{libcxx_buildpath}/include/string",
-        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)",
-        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
-
       # On Snow Leopard and older system libc++abi is not shipped but
       # needed here. It is hard to tweak environment settings to change
       # include path as libc++ uses a custom build script, so just
       # symlink the needed header here.
       ln_s libcxxabi_buildpath/"include/cxxabi.h", libcxx_buildpath/"include"
+    end
+
+    if MacOS.version >= :el_capitan do
+      inreplace "#{libcxx_buildpath}/include/string",
+        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a)",
+        "basic_string<_CharT, _Traits, _Allocator>::basic_string(const allocator_type& __a) noexcept(is_nothrow_copy_constructible<allocator_type>::value)"
     end
 
     # Putting libcxx in projects only ensures that headers are installed.
